@@ -3,8 +3,8 @@ Aplicación de los conceptos de Visión Artificial mediante el entrenamiento de 
 # Proyecto: Sistema de Inspección de Calidad Automatizado mediante Visión Artificial (YOLO)
 
 ### Integrante:
-* JOSE RAMON NAVARRO MARQUEZ
-
+* 23310351 CRISTIAN YERAM GONZALEZ MIRANDA
+* 23310348 JOSE EDUARDO MARTINEZ DURAN
 ---
 
 ## 1. Caso de Estudio: Clasificación de Fruta y Control de Calidad Agroindustrial
