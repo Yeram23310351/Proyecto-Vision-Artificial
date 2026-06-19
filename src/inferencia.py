@@ -1,40 +1,32 @@
-import os
 import cv2
-import matplotlib.pyplot as plt
+import os
 from ultralytics import YOLO
 
-# 1. Cargar el modelo YOLOv8 pre-entrenado (o el archivo 'best.pt' si entrenaron uno propio)
-# Usamos el modelo nano ('n') por ser ideal para procesamiento rápido en entornos industriales
-print("Cargando modelo YOLOv8...")
-model = YOLO('yolov8n.pt') 
+def ejecutar_inferencia():
+    # 1. Cargar el modelo con los pesos descargados
+    # Asegúrate de colocar el archivo 'best.pt' en la misma ruta o especificar dónde está
+    model = YOLO("runs/detect/train/weights/best.pt") 
 
-# 2. Definir la ruta de la imagen o video de prueba (Carpeta de evidencias)
-# Nota: Asegúrate de tener una imagen llamada 'prueba.jpg' en tu carpeta de evidencias
-ruta_imagen = 'evidencias/prueba.jpg'
+    # 2. Ruta de la imagen de prueba (reemplaza si tu archivo se llama diferente o está en otra carpeta)
+    ruta_imagen = "prueba.jpg" 
 
-if not os.path.exists(ruta_imagen):
-    print(f"⚠️ Error: No se encontró la imagen en '{ruta_imagen}'.")
-    print("Por favor, guarda una imagen de prueba en esa ruta para ejecutar el script.")
-else:
-    print(f"Ejecutando inferencia en: {ruta_imagen}...")
-    
-    # 3. Realizar la predicción (Inferencia) con el modelo
-    # 'conf=0.25' significa que mostrará detecciones con más del 25% de certeza
-    resultados = model.predict(source=ruta_imagen, conf=0.25, save=False)
+    if not os.path.exists(ruta_imagen):
+        print(f"Error: No se encontró el archivo {ruta_imagen} en la raíz del proyecto.")
+        return
 
-    # 4. Procesar y mostrar los resultados usando Matplotlib (Como lo viste en clase)
-    for resultado in resultados:
-        # Dibujar las cajitas de selección (bounding boxes) sobre la imagen original
-        imagen_con_detecciones = resultado.plot()
-        
-        # Convertir el color de BGR (OpenCV) a RGB (Matplotlib) para que se vea bien
-        imagen_rgb = cv2.cvtColor(imagen_con_detecciones, cv2.COLOR_BGR2RGB)
-        
-        # Representación gráfica del resultado
-        plt.figure(figsize=(10, 6))
-        plt.imshow(imagen_rgb)
-        plt.title("Detección de Objetos en Tiempo Real - Sistema de Inspección")
-        plt.axis('off') # Ocultar los ejes para que se vea más limpio
-        plt.show()
-        
-        print("Inferencia completada con éxito. ¡Imagen desplegada!")
+    # 3. Ejecutar la predicción
+    print("Procesando imagen con YOLOv8...")
+    results = model(ruta_imagen)
+
+    # 4. Crear la carpeta de evidencias si no existe
+    os.makedirs("evidencias", exist_ok=True)
+
+    # 5. Dibujar los cuadros de detección (bounding boxes) y guardar el resultado
+    for r in results:
+        im_bgr = r.plot()  # Dibuja las cajas y etiquetas sobre la imagen
+        ruta_resultado = os.path.join("evidencias", "resultado_prueba.jpg")
+        cv2.imwrite(ruta_resultado, im_bgr)
+        print(f"¡Éxito! Imagen resultante guardada en: {ruta_resultado}")
+
+if __name__ == "__main__":
+    ejecutar_inferencia()
