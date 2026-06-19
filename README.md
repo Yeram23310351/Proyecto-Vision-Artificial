@@ -1,34 +1,36 @@
 # Proyecto-Vision-Artificial
 Aplicación de los conceptos de Visión Artificial mediante el entrenamiento de un modelo de la familia YOLO (You Only Look Once) para el reconocimiento de un conjunto de imágenes específico.
-# Proyecto: Sistema de Inspección de Calidad Automatizado mediante Visión Artificial (YOLO)
 
-### Integrante:
+# Proyecto: Sistema de Visión para Cosecha Automatizada y Estimación de Rendimiento Agrícola (YOLO)
+
+### Integrantes:
 * 23310351 CRISTIAN YERAM GONZALEZ MIRANDA
 * 23310348 JOSE EDUARDO MARTINEZ DURAN
+
 ---
 
-## 1. Caso de Estudio: Clasificación de Fruta y Control de Calidad Agroindustrial
+## 1. Caso de Estudio: Automatización de Cosecha y Monitoreo en Huertos
 
 ### A. Problema a Resolver
-En las plantas empacadoras y distribuidoras de fruta, la presencia de piezas dañadas, podridas o mordidas por fauna/plagas merma la calidad del lote entero y acelera la descomposición de los productos sanos a su alrededor. La selección manual es lenta y poco higiénica. Este proyecto propone automatizar la inspección de calidad de manzanas en tiempo real en una línea de selección, identificando si una manzana está en estado óptimo o si se encuentra mordida/dañada utilizando el modelo YOLOv8.
+En el sector agrícola, la recolección manual de manzanas es una labor que requiere una gran cantidad de mano de obra y tiempo. Además, estimar el rendimiento de la cosecha observando los árboles de forma tradicional es impreciso. Este proyecto propone un sistema de visión artificial capaz de detectar manzanas en su entorno natural (directamente en las ramas del árbol o en superficies de recolección) utilizando el modelo YOLOv8. Esta detección es el paso fundamental para guiar vehículos agrícolas autónomos (Rovers) y brazos robóticos recolectores.
 
-### B. Hardware Propuesto (Entorno Industrial)
-* **Cámara de Visión Industrial:** Una cámara Basler montada a una distancia focal fija sobre la banda transportadora para capturar imágenes de alta resolución de las manzanas en movimiento.
-* **Sistema de Iluminación:** Iluminación domo LED de luz blanca fría difusa para evitar los brillos que produce la cáscara de la manzana y obtener colores reales.
-* **Procesador de Borde (Edge Computing):** Una unidad Nvidia Jetson que recibe el flujo de video en tiempo real y ejecuta las inferencias del modelo YOLOv8 Nano en milisegundos.
-* **Actuador de Separación:** Un brazo expulsor neumático o un soplador de aire comprimido industrial de alta presión controlado por una electroválvula de 24VCC.
-* **Controlador Principal:** Un PLC Siemens S7-1200 encargado de recibir la señal de descarte y coordinar el actuador según la velocidad de la banda transportadora.
+### B. Hardware Propuesto (Entorno Industrial-Agrícola)
+* **Cámara de Visión Robótica:** Una cámara estéreo o RGB de amplio campo de visión (FOV) montada en el mástil de un vehículo agrícola autónomo.
+* **Sistema de Iluminación:** Aprovechamiento de luz natural con filtros polarizadores para reducir el brillo de las hojas, complementado con focos LED estroboscópicos para compensar las sombras densas dentro del follaje del árbol.
+* **Procesador de Borde (Edge Computing):** Una unidad Nvidia Jetson a bordo del vehículo que recibe el flujo de video en tiempo real y ejecuta las inferencias del modelo YOLOv8 Nano en milisegundos, ideal para robótica móvil.
+* **Actuador de Recolección:** Un brazo robótico de múltiples grados de libertad equipado con un efector final de agarre suave (soft gripper) diseñado para no magullar la fruta.
+* **Controlador Principal:** Un microcontrolador industrial o PLC compacto encargado de recibir las coordenadas de las manzanas detectadas en la imagen y traducirlas en cinemática inversa para mover el brazo robótico.
 
 ### C. Flujo de Funcionamiento
-1. Las manzanas avanzan en fila sobre una banda transportadora de rodillos (los cuales hacen girar la fruta para que la cámara inspeccione todos sus lados).
-2. La cámara captura continuamente el paso de cada pieza bajo la zona de iluminación.
-3. El procesador Nvidia Jetson ejecuta el modelo YOLOv8 sobre cada cuadro de video para buscar dos clases específicas: `Manzana_Sana` o `Manzana_Mordida`.
-4. Si el modelo detecta una manzana con la etiqueta `Manzana_Mordida` con una certeza mayor al 80%, envía inmediatamente una señal digital de alerta hacia el PLC.
-5. El PLC calcula el tiempo exacto que tarda esa manzana en llegar al final de la banda y activa el actuador neumático, desviando la manzana dañada hacia una sección de merma o procesamiento secundario (como jugos), permitiendo que solo las manzanas perfectas continúen hacia el área de empaque final.
+1. El vehículo autónomo avanza a velocidad constante por los pasillos del huerto de manzanas.
+2. La cámara principal escanea continuamente el follaje de los árboles o las superficies de recolección.
+3. El procesador Nvidia Jetson ejecuta el modelo YOLOv8 sobre cada cuadro de video, buscando e identificando las manzanas presentes en la escena.
+4. Al detectar una manzana con un alto nivel de confianza, el sistema calcula la posición relativa (Bounding Box) del objeto dentro del entorno de trabajo.
+5. El procesador envía las coordenadas al PLC o controlador del brazo robótico, el cual despliega el efector final hacia la posición exacta para recolectar la manzana y depositarla en el contenedor del vehículo.
 
 ---
 
-## Instrucciones de Ejecución
+## 🚀 Instrucciones de Ejecución
 
 1. Instalar las dependencias necesarias:
    ```bash
